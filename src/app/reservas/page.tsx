@@ -24,6 +24,7 @@ export default function ReservasPage() {
             <div className="btn-row">
               <Button href={whatsappLink()} variant="ghost" arrow={false}>WhatsApp {site.phones.whatsapp.display}</Button>
               <a className="link" href={telLink(site.phones.landline.e164)}>Llamar · {site.phones.landline.display}</a>
+              <button type="button" className="link" data-concierge>Preguntar al concierge</button>
             </div>
           </aside>
           <div className="book__frame">

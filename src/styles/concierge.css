@@ -1,0 +1,73 @@
+/* ───────────── Dock: concierge + WhatsApp ───────────── */
+.dock { position: fixed; z-index: 80; right: max(1rem, env(safe-area-inset-right)); bottom: max(1rem, env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 0.5rem; }
+.dock__concierge {
+  height: 3.1rem; padding: 0 1.3rem 0 1.1rem; display: inline-flex; align-items: center; gap: 0.7rem; border-radius: 999px;
+  background: var(--bone); color: var(--char); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  box-shadow: 0 0.6rem 2rem rgba(0, 0, 0, 0.45); transition: transform 0.5s var(--ease), background-color 0.3s;
+}
+.dock__concierge:hover { transform: translateY(-2px); }
+.dock__concierge i { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--ember); animation: pulse-e 2.6s infinite; }
+@keyframes pulse-e { 70% { box-shadow: 0 0 0 0.5rem rgba(232, 86, 28, 0); } 100% { box-shadow: 0 0 0 0 rgba(232, 86, 28, 0); } }
+.dock__wa {
+  position: relative; width: 3.1rem; height: 3.1rem; display: grid; place-items: center; border-radius: 50%;
+  background: rgba(13, 10, 8, 0.82); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(239, 230, 214, 0.28); color: var(--bone); transition: background-color 0.35s, color 0.35s, border-color 0.35s, transform 0.5s var(--ease);
+}
+.dock__wa svg { width: 1.35rem; height: 1.35rem; }
+.dock__wa:hover { background: var(--ember); border-color: var(--ember); color: var(--char); transform: translateY(-2px); }
+.dock__tip { position: absolute; right: calc(100% + 0.6rem); top: 50%; translate: 0 -50%; padding: 0.35rem 0.7rem; background: var(--bone); color: var(--char); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; border-radius: 3px; opacity: 0; pointer-events: none; transition: opacity 0.25s; white-space: nowrap; }
+@media (hover: hover) { .dock__wa:hover .dock__tip { opacity: 1; } }
+
+/* ───────────── Sheet ───────────── */
+.sheet-scrim { position: fixed; inset: 0; z-index: 84; background: rgba(0, 0, 0, 0.5); opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0s 0.4s; }
+.sheet {
+  position: fixed; z-index: 85; right: 1rem; bottom: 5rem; width: min(26rem, calc(100vw - 2rem)); height: min(37rem, calc(100svh - 7rem));
+  display: flex; flex-direction: column; background: var(--coal); border: 1px solid var(--line); border-radius: 6px;
+  box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.6);
+  opacity: 0; visibility: hidden; transform: translateY(1rem) scale(0.98); transform-origin: bottom right;
+  transition: opacity 0.4s var(--ease), transform 0.5s var(--ease), visibility 0s 0.5s;
+}
+.sheet.is-open { opacity: 1; visibility: visible; transform: none; transition: opacity 0.4s var(--ease), transform 0.5s var(--ease), visibility 0s; }
+.sheet__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.25rem 1.25rem 1rem; border-bottom: 1px solid var(--line); }
+.sheet__title { font-family: var(--font-display); font-weight: 400; font-size: 1.9rem; line-height: 1; letter-spacing: -0.01em; }
+.sheet__sub { color: var(--smoke); font-size: var(--fs-meta); letter-spacing: 0.16em; text-transform: uppercase; margin-top: 0.4rem; }
+.sheet__close { position: relative; width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 1px solid var(--line); flex: none; }
+.sheet__close span { position: absolute; left: 50%; top: 50%; width: 1rem; height: 1px; background: var(--bone); }
+.sheet__close span:first-child { transform: translate(-50%, -50%) rotate(45deg); }
+.sheet__close span:last-child { transform: translate(-50%, -50%) rotate(-45deg); }
+.sheet__log { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; scrollbar-width: thin; scrollbar-color: var(--ash) transparent; }
+.msg { max-width: 88%; display: grid; gap: 0.75rem; }
+.msg p { font-size: 0.97rem; line-height: 1.55; }
+.msg--bot p { color: var(--bone); }
+.msg--user { align-self: flex-end; }
+.msg--user p { background: var(--bone); color: var(--char); padding: 0.7rem 1rem; border-radius: 4px 4px 0 4px; }
+.msg__actions, .msg__chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.msg__action, .msg__chips button {
+  display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.5rem; padding: 0 1rem; border-radius: 999px; font-size: 0.86rem;
+  border: 1px solid var(--line); color: var(--bone); transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+.msg__action { border-color: rgba(232, 86, 28, 0.6); }
+.msg__action svg { width: 0.9rem; height: 0.9rem; }
+.msg__action:hover, .msg__chips button:hover { background: var(--bone); color: var(--char); border-color: var(--bone); }
+.msg--typing { display: flex; gap: 0.3rem; padding-block: 0.3rem; }
+.msg--typing i { width: 0.4rem; height: 0.4rem; border-radius: 50%; background: var(--smoke); animation: typing 1.2s infinite; }
+.msg--typing i:nth-child(3) { animation-delay: 0.15s; } .msg--typing i:nth-child(4) { animation-delay: 0.3s; }
+@keyframes typing { 0%, 60%, 100% { opacity: 0.25; transform: none; } 30% { opacity: 1; transform: translateY(-3px); } }
+.sheet__form { display: flex; gap: 0.5rem; padding: 0.75rem 1rem 0.5rem; border-top: 1px solid var(--line); }
+.sheet__form input { flex: 1; min-width: 0; background: transparent; border: 0; border-bottom: 1px solid var(--line); padding: 0.7rem 0; font-size: 16px; color: var(--bone); }
+.sheet__form input:focus-visible { outline: 0; border-color: var(--ember); }
+.sheet__form button { width: 2.75rem; height: 2.75rem; border-radius: 50%; background: var(--ember); color: var(--char); display: grid; place-items: center; flex: none; transition: opacity 0.2s; }
+.sheet__form button[disabled] { opacity: 0.35; cursor: default; }
+.sheet__form button svg { width: 1.1rem; height: 1.1rem; }
+.sheet__note { padding: 0 1.25rem 0.9rem; color: var(--smoke); font-size: 0.74rem; }
+
+@media (max-width: 39.99rem) {
+  .sheet { right: 0; left: 0; bottom: 0; width: 100%; height: min(86svh, 40rem); border-radius: 16px 16px 0 0; border-bottom: 0; transform: translateY(100%); transform-origin: bottom center; padding-bottom: env(safe-area-inset-bottom); }
+  .sheet.is-open { transform: none; }
+  .sheet-scrim.is-open { opacity: 1; visibility: visible; transition: opacity 0.4s, visibility 0s; }
+  .dock__tip { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet, .sheet.is-open { transition: none; transform: none; }
+  .dock__concierge i, .msg--typing i { animation: none; }
+}

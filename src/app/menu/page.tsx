@@ -23,6 +23,7 @@ export default function MenuPage() {
           <div className="btn-row" data-fade>
             <Button href={whatsappLink("Hola, me gustaría conocer el menú y los precios de Fogo de Chão.")}>Consultar por WhatsApp</Button>
             <Button href="/reservas" variant="ghost">Reservar mesa</Button>
+            <button type="button" className="link" data-concierge>Preguntar al concierge</button>
           </div>
         </div>
       </section>

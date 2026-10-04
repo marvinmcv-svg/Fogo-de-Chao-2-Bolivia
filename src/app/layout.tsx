@@ -5,11 +5,13 @@ import "@fontsource-variable/hanken-grotesk/index.css";
 import "@/styles/globals.css";
 import "@/styles/home.css";
 import "@/styles/pages.css";
+import "@/styles/concierge.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Motion } from "@/components/Motion";
 import { Transition } from "@/components/Transition";
 import { Cursor } from "@/components/Cursor";
+import { Concierge } from "@/components/concierge/Concierge";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -36,6 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <Motion />
         <Transition />
+        <Concierge />
         <Cursor />
       </body>
     </html>

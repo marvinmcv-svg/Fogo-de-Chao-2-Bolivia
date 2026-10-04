@@ -36,6 +36,7 @@ export default function ContactoPage() {
             <div className="btn-row">
               <a className="link" href={site.social.instagram} target="_blank" rel="noopener noreferrer">Instagram</a>
               <a className="link" href={site.social.facebook} target="_blank" rel="noopener noreferrer">Facebook</a>
+              <button type="button" className="link" data-concierge>Preguntar al concierge</button>
             </div>
           </aside>
         </div>
