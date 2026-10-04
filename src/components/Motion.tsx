@@ -82,6 +82,13 @@ export function Motion() {
         });
       });
 
+      gsap.utils.toArray<HTMLElement>("[data-scrub]").forEach((el) => {
+        gsap.fromTo(el.querySelectorAll(".sw"), { opacity: 0.16 }, {
+          opacity: 1, ease: "none", stagger: 0.12,
+          scrollTrigger: { trigger: el, start: "top 82%", end: "bottom 48%", scrub: true },
+        });
+      });
+
       // Subtle parallax for media inside [data-parallax]
       gsap.utils.toArray<HTMLElement>("[data-parallax]").forEach((el) => {
         const amount = Number(el.dataset.parallax || 8);

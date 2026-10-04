@@ -242,3 +242,11 @@ html.lenis, html.lenis body { height: auto; }
 /* Footer columns: 2-up from tablet, 4-up desktop */
 @media (min-width: 40rem) { .footer__col[data-cols] { grid-column: span 6 !important; } }
 @media (min-width: 64rem) { .footer__col[data-cols] { grid-column: span 3 !important; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-scrub] .sw { opacity: 0.16; }
+}
+.open-now { display: inline-flex; align-items: center; gap: 0.6rem; font-size: var(--fs-meta); letter-spacing: 0.18em; text-transform: uppercase; color: var(--bone); }
+.open-now i { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--smoke); }
+.open-now i.on { background: #4fbf7f; box-shadow: 0 0 0 0 rgba(79, 191, 127, 0.6); animation: pulse 2.4s infinite; }
+@keyframes pulse { 70% { box-shadow: 0 0 0 0.55rem rgba(79, 191, 127, 0); } 100% { box-shadow: 0 0 0 0 rgba(79, 191, 127, 0); } }

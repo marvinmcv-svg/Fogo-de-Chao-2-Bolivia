@@ -1,9 +1,21 @@
-import { Split } from "@/components/ui/Split";
+import { Hero } from "@/components/home/Hero";
+import { Manifesto } from "@/components/home/Manifesto";
+import { Ritual } from "@/components/home/Ritual";
+import { CutsRail } from "@/components/home/CutsRail";
+import { Experiences } from "@/components/home/Experiences";
+import { StoryTeaser } from "@/components/home/StoryTeaser";
+import { Visit } from "@/components/Visit";
 
 export default function Home() {
   return (
-    <section className="section container" style={{ paddingTop: "calc(var(--header-h) + 8rem)" }}>
-      <Split as="h1" className="h1" text={"El fuego\n*no se apaga.*"} />
-    </section>
+    <>
+      <Hero />
+      <Manifesto />
+      <Ritual />
+      <CutsRail />
+      <Experiences />
+      <StoryTeaser />
+      <Visit />
+    </>
   );
 }

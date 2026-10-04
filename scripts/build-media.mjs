@@ -16,9 +16,9 @@ const images = [
   ["carving-table", "37bef304ea82.jpg", 1800],
   ["picanha-roast", "453d3040d852.jpg", 1600],
   ["steak-sear", "b39e809c1836.jpeg", 1600],
-  ["gaucho-carving", "dd4d416ae992.jpg", 1800],
+  ["gaucho-carving", "c4c2ee8a75a1.jpg", 1800],
   ["knife-cut", "ed8a39663bf4.jpg", 1600],
-  ["ribs-carving", "8c7686c5eea2.jpg", 1600],
+  ["ribs-carving", "8b9802b7e6ac.jpg", 1600],
   ["linguica", "afbc9024c2f3.jpg", 1200],
   ["caipirinha", "2a6bc7ab510c.jpg", 1600],
   ["pao-de-queijo", "46c219aa7df9.jpg", 1600],
@@ -26,7 +26,7 @@ const images = [
   ["skewers", "01028b3ce132.jpg", 2000],
   ["sliced-cut", "01822b14ab5f.jpg", 1600],
   ["flank", "c303966d0e66.jpg", 1200],
-  ["feijoada", "8e495791664b.jpg", 1200],
+  ["feijoada", "9cc31338d289.jpg", 1200],
 ];
 for (const [name, file, w] of images) {
   await sharp(path.join(SRC, "ref", file)).rotate().resize({ width: w, withoutEnlargement: true })
