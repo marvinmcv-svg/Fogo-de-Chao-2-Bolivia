@@ -5,6 +5,8 @@ const routes: { path: string; priority: number; changeFrequency: "weekly" | "mon
   { path: "", priority: 1, changeFrequency: "weekly" },
   { path: "/menu", priority: 0.9, changeFrequency: "monthly" },
   { path: "/reservas", priority: 0.9, changeFrequency: "monthly" },
+  { path: "/eventos", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/faq", priority: 0.6, changeFrequency: "monthly" },
   { path: "/ubicacion", priority: 0.8, changeFrequency: "yearly" },
   { path: "/historia", priority: 0.6, changeFrequency: "yearly" },
   { path: "/contacto", priority: 0.7, changeFrequency: "yearly" },

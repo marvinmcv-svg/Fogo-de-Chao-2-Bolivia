@@ -28,8 +28,8 @@ export default function ContactoPage() {
               <p><a className="link-plain" href={mapsLink} target="_blank" rel="noopener noreferrer">{site.address.line1}<br />{site.address.line2}<br />{site.address.city}</a></p>
             </div>
             <div>
-              <h2 className="meta">Horarios · todos los días</h2>
-              <p className="num">{site.hours.map((h) => `${h.label} ${h.open}–${h.close}`).join(" · ")}</p>
+              <h2 className="meta">Horarios, todos los días</h2>
+              <p className="num">{site.hours.map((h) => `${h.label} ${h.open} a ${h.close}`).join(", ")}</p>
             </div>
             <div className="btn-row">
               <a className="link" href={site.social.instagram} target="_blank" rel="noopener noreferrer">Instagram</a>

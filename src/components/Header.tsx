@@ -62,13 +62,13 @@ export function Header() {
     <>
       <header className={`header${solid ? " is-solid" : ""}${hidden ? " is-hidden" : ""}`}>
         <div className="container header__inner">
-          <Link href="/" className="header__logo" aria-label={`${site.name} — inicio`}>
+          <Link href="/" className="header__logo" aria-label={`${site.name}, inicio`}>
             <Image src="/media/brand/fogo-logo-white.png" alt="" width={960} height={194} priority sizes="184px" />
           </Link>
 
           <nav className="header__nav" aria-label="Principal">
             {nav.map((item) => (
-              <Link key={item.href} href={item.href} aria-current={pathname === item.href ? "page" : undefined}>
+              <Link key={item.href} href={item.href} data-scramble aria-current={pathname === item.href ? "page" : undefined}>
                 {item.label}
               </Link>
             ))}
@@ -93,9 +93,8 @@ export function Header() {
 
       <div id="site-menu" ref={menuRef} className={`menu${open ? " is-open" : ""}`} role="dialog" aria-modal="true" aria-label="Menú" aria-hidden={!open} inert={!open}>
         <nav aria-label="Menú móvil" className="menu__links">
-          {[{ href: "/", label: "Inicio" }, ...nav].map((item, i) => (
+          {[{ href: "/", label: "Inicio" }, ...nav].map((item) => (
             <Link key={item.href} href={item.href} onClick={close}>
-              <small className="num">0{i + 1}</small>
               <span>{item.label}</span>
             </Link>
           ))}
@@ -103,7 +102,7 @@ export function Header() {
         <div className="menu__foot">
           <p>{site.address.line1}<br />{site.address.line2}</p>
           <p>
-            <a href={telLink(site.phones.landline.e164)}>{site.phones.landline.display}</a> ·{" "}
+            <a href={telLink(site.phones.landline.e164)}>{site.phones.landline.display}</a>{" "}
             <a href={whatsappLink()} target="_blank" rel="noopener noreferrer">WhatsApp {site.phones.whatsapp.display}</a>
           </p>
         </div>

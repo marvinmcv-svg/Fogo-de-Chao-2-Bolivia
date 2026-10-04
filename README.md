@@ -19,10 +19,14 @@ npm run lint && npm run typecheck
 | `/historia` | Official brand story as chapters |
 | `/ubicacion` | Address, hours, live "open now" (Bolivia time), map |
 | `/reservas` | Restoo booking iframe (the existing system of record) + WhatsApp/phone |
+| `/eventos` | Groups and celebrations: occasions + event lead form (date, party size) |
+| `/faq` | Accordion with verified answers + FAQPage JSON-LD |
 | `/contacto` | Accessible lead form |
 | `/privacidad`, `/terminos` | Plain-language legal pages |
 
-Site-wide: **Concierge** (virtual receptionist) + **WhatsApp** dock, page-aware pre-filled WhatsApp message, curtain page transitions, sitemap/robots/manifest/JSON-LD.
+Home also has a **quick-reservation bar** (date, party size, service → Restoo or a pre-written WhatsApp), a scroll-velocity **marquee**, a pinned **zoom-parallax gallery** and a **sticky stack** of gradient panels.
+
+Site-wide: **Concierge** (guided in-chat booking request, voice input, basic English, one dismissible nudge per session) + **WhatsApp widget** (live open/closed status, one-tap pre-written messages), page-aware pre-filled WhatsApp message, curtain page transitions, sitemap/robots/manifest/JSON-LD.
 
 Design direction ("Brasa") is in [`docs/DESIGN.md`](docs/DESIGN.md); the audit of the original site is in [`docs/AUDIT.md`](docs/AUDIT.md).
 
@@ -76,3 +80,11 @@ It identifies as an automatic assistant, never confirms reservations, never inve
 2. Set `LEAD_WEBHOOK_URL` (and optionally `ANTHROPIC_API_KEY`), then test a real lead end-to-end.
 3. Supply real prices/ratings/testimonials only if the owner can stand behind them.
 4. Add a Content-Security-Policy once the final third-party list is fixed (Restoo, Google Maps).
+
+## Luxe upgrade (this release)
+
+- **Look:** Bodoni Moda display type, fire-gradient aurora that re-tints per section, film grain, glass double-bezel surfaces, spotlight borders. Taste-skill rules applied: no custom cursor, no em-dashes, no scroll cue, no section numbering, one radius system, one accent.
+- **3D:** a physically shaded WebGL rodizio token that flips green/red with the ritual steps (pointer tilt, scroll spin); a domain-warped fire shader under the hero embers; 3D page-turn on the cuts rail; tilt cards.
+- **GSAP:** sticky stack, zoom parallax, velocity marquee, drawn progress line, text scramble nav, hero pointer depth, magnetic buttons. All gated by `prefers-reduced-motion`; WebGL is lazy and falls back to CSS.
+- **Not added (needs owner input):** newsletter/loyalty, gift cards, reviews/press, language toggle. Testimonials and ratings stay empty until real.
+- Market study note: the brief mentioned law firms; premium steakhouse/churrascaria patterns were used instead (quick booking, events, FAQ, WhatsApp, structured data).

@@ -15,13 +15,13 @@ export default function ReservasPage() {
         <div className="container book__grid">
           <aside className="book__aside stack-m">
             <dl className="book__facts num">
-              <dt className="meta">Horarios · todos los días</dt>
-              {site.hours.map((h) => <dd key={h.label}><span>{h.label}</span><span>{h.open} – {h.close}</span></dd>)}
+              <dt className="meta">Horarios, todos los días</dt>
+              {site.hours.map((h) => <dd key={h.label}><span>{h.label}</span><span>{h.open} a {h.close}</span></dd>)}
             </dl>
             <p className="body">¿Grupos grandes o celebraciones? Escríbenos y lo coordinamos.</p>
             <div className="btn-row">
               <Button href={whatsappLink()} variant="ghost" arrow={false}>WhatsApp {site.phones.whatsapp.display}</Button>
-              <a className="link" href={telLink(site.phones.landline.e164)}>Llamar · {site.phones.landline.display}</a>
+              <a className="link" href={telLink(site.phones.landline.e164)}>Llamar al {site.phones.landline.display}</a>
               <button type="button" className="link" data-concierge>Preguntar al concierge</button>
             </div>
           </aside>

@@ -4,7 +4,8 @@ import { useEffect, useRef } from "react";
 import { prefersReducedMotion } from "@/lib/motion";
 
 /**
- * Rising embers: a single GPU point cloud behind the hero copy.
+ * Hero fire: a domain-warped gradient field (ember, garnet, amber) that breathes with the pointer and scroll,
+ * with a GPU point cloud of rising embers on top. One WebGL context, two draw calls.
  * Only runs on capable desktops (wide viewport, fine pointer, ≥4 cores, no Save-Data, no reduced motion),
  * pauses when off-screen or the tab is hidden, and `three` is fetched lazily so it never blocks first paint.
  */
@@ -89,6 +90,40 @@ export function Embers() {
       });
       scene.add(new THREE.Points(geo, mat));
 
+      // Fire field: fbm domain warp mapped through a deep-wine → garnet → ember → amber ramp, strongest at the bottom edge.
+      const fire = new THREE.ShaderMaterial({
+        transparent: true, depthWrite: false,
+        uniforms: { uTime: { value: 0 }, uMouse: { value: new THREE.Vector2() }, uScroll: { value: 0 }, uAspect: { value: 1 } },
+        vertexShader: /* glsl */ `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }`,
+        fragmentShader: /* glsl */ `
+          precision highp float;
+          varying vec2 vUv; uniform float uTime, uScroll, uAspect; uniform vec2 uMouse;
+          float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+          float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
+            return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y); }
+          float fbm(vec2 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 5; i++){ v += a * noise(p); p = p * 2.02 + 7.3; a *= 0.5; } return v; }
+          void main(){
+            vec2 uv = vUv; vec2 p = vec2(uv.x * uAspect, uv.y) * 1.6;
+            float t = uTime * 0.08;
+            vec2 q = vec2(fbm(p + vec2(0.0, t)), fbm(p + vec2(5.2, 1.3) - t));
+            vec2 r = vec2(fbm(p + 3.0*q + vec2(1.7, 9.2) + t*1.3), fbm(p + 3.0*q + vec2(8.3, 2.8) - t));
+            float f = fbm(p + 3.2*r + uMouse * 0.6);
+            float rise = smoothstep(1.05, -0.1, uv.y - uScroll * 0.35);
+            float heat = clamp(f * 1.35 * (0.35 + rise * 0.95), 0.0, 1.0);
+            vec3 wine = vec3(0.23, 0.05, 0.04), garnet = vec3(0.55, 0.14, 0.08), ember = vec3(0.91, 0.34, 0.11), amber = vec3(1.0, 0.63, 0.29);
+            vec3 col = mix(wine, garnet, smoothstep(0.1, 0.45, heat));
+            col = mix(col, ember, smoothstep(0.4, 0.75, heat));
+            col = mix(col, amber, smoothstep(0.72, 1.0, heat));
+            float vig = smoothstep(1.25, 0.25, length((uv - vec2(0.5 + uMouse.x*0.1, 0.0)) * vec2(1.0, 1.15)));
+            float a = clamp(heat * vig * 0.42, 0.0, 0.4);
+            gl_FragColor = vec4(col, a);
+          }`,
+      });
+      const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), fire);
+      quad.frustumCulled = false;
+      quad.renderOrder = -1;
+      scene.add(quad);
+
       const resize = () => {
         const w = el.clientWidth, h = el.clientHeight;
         if (!w || !h) return;
@@ -96,6 +131,7 @@ export function Embers() {
         const aspect = w / h;
         cam.left = -aspect; cam.right = aspect; cam.updateProjectionMatrix();
         mat.uniforms.uAspect.value = aspect;
+        fire.uniforms.uAspect.value = aspect;
         mat.uniforms.uPx.value = 14 * renderer.getPixelRatio() * (h / 900);
       };
       const ro = new ResizeObserver(resize);
@@ -116,6 +152,9 @@ export function Embers() {
         mat.uniforms.uTime.value += dt;
         mouse.x += (target.x - mouse.x) * 0.04; mouse.y += (target.y - mouse.y) * 0.04;
         mat.uniforms.uMouse.value.set(mouse.x, mouse.y);
+        fire.uniforms.uTime.value += dt;
+        fire.uniforms.uMouse.value.set(mouse.x, mouse.y);
+        fire.uniforms.uScroll.value = Math.min(scrollY / Math.max(innerHeight, 1), 1.2);
         renderer.render(scene, cam);
       };
       raf = requestAnimationFrame(frame);
@@ -125,7 +164,7 @@ export function Embers() {
         cancelAnimationFrame(raf);
         ro.disconnect(); io.disconnect();
         window.removeEventListener("pointermove", onMove);
-        geo.dispose(); mat.dispose(); renderer.dispose();
+        geo.dispose(); mat.dispose(); fire.dispose(); quad.geometry.dispose(); renderer.dispose();
         canvas.remove();
       };
     };

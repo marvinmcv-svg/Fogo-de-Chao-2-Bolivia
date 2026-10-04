@@ -1,5 +1,6 @@
 /* ───────────── Hero ───────────── */
-.hero { position: relative; min-height: 100svh; display: flex; overflow: clip; isolation: isolate; }
+.hero { --hero-h: 100svh; position: relative; min-height: var(--hero-h); display: flex; overflow: clip; isolation: isolate; }
+@media (min-width: 62rem) { .hero { --hero-h: max(34rem, calc(100svh - 11.5rem)); } }
 .hero__media { position: absolute; inset: 0; z-index: -1; background: var(--char); }
 .hero__poster, .hero__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .hero__video { opacity: 0; transition: opacity 1.4s ease; }
@@ -7,10 +8,10 @@
 .hero__scrim {
   position: absolute; inset: 0;
   background:
-    linear-gradient(to top, rgba(13, 10, 8, 0.92) 0%, rgba(13, 10, 8, 0.35) 45%, rgba(13, 10, 8, 0.55) 100%),
+    linear-gradient(to top, rgba(13, 10, 8, 0.86) 0%, rgba(13, 10, 8, 0.3) 45%, rgba(13, 10, 8, 0.55) 100%),
     linear-gradient(to right, rgba(13, 10, 8, 0.55), transparent 60%);
 }
-.hero__inner { position: relative; display: flex; flex-direction: column; justify-content: flex-end; gap: clamp(2rem, 5vw, 4rem); padding-top: calc(var(--header-h) + 3rem); padding-bottom: clamp(1.75rem, 3vw, 3rem); min-height: 100svh; }
+.hero__inner { position: relative; display: flex; flex-direction: column; justify-content: flex-end; gap: clamp(2rem, 5vw, 4rem); padding-top: calc(var(--header-h) + 3rem); padding-bottom: clamp(1.75rem, 3vw, 3rem); min-height: var(--hero-h); }
 .hero__kicker { position: absolute; top: calc(var(--header-h) + 2.5rem); left: var(--gutter); color: var(--bone); }
 .hero__body { display: grid; gap: 2.5rem; align-items: end; }
 .hero__title { max-width: none; }
@@ -20,22 +21,17 @@
 .hero__pause { width: 2.25rem; height: 2.25rem; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; color: var(--bone); transition: background-color 0.3s, color 0.3s; }
 .hero__pause svg { width: 0.8rem; height: 0.8rem; }
 .hero__pause:hover { background: var(--bone); color: var(--char); }
-.hero__cue { display: none; align-items: center; gap: 0.75rem; }
-.hero__cue i { width: 1px; height: 2.5rem; background: linear-gradient(var(--bone), transparent); animation: cue 2.2s var(--ease) infinite; transform-origin: top; }
-@keyframes cue { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
 @media (min-width: 62rem) {
   .hero__body { grid-template-columns: 1fr auto; gap: 4rem; }
   .hero__title { max-width: none; }
   .hero__loc { margin-left: 0; }
-  .hero__cue { display: inline-flex; margin-left: auto; }
-  .hero__cue + .hero__pause { margin-left: 0; }
+  .hero__pause { margin-left: auto; }
 }
-@media (prefers-reduced-motion: reduce) { .hero__video { display: none; } .hero__cue i { animation: none; } .hero__pause { display: none; } }
+@media (prefers-reduced-motion: reduce) { .hero__video { display: none; } .hero__pause { display: none; } }
 
 /* ───────────── Manifesto ───────────── */
-.manifesto__eyebrow { grid-column: 1 / -1; margin-bottom: 2.5rem; }
 .manifesto__text { grid-column: 1 / -1; max-width: 22ch; font-size: clamp(2.4rem, 1.2rem + 5.2vw, 6.25rem); line-height: 1; }
-@media (min-width: 62rem) { .manifesto__text { grid-column: 2 / span 10; max-width: none; } .manifesto__eyebrow { grid-column: 2 / span 10; } }
+@media (min-width: 62rem) { .manifesto__text { grid-column: 2 / span 10; max-width: none; } }
 
 /* ───────────── Ritual ───────────── */
 .ritual { padding-top: 0; }
@@ -96,21 +92,6 @@
   .cut:nth-child(even) { align-self: flex-end; }
   .cuts__outro { width: 24vw; }
   .cuts__progress { display: block; }
-}
-
-/* ───────────── Experiences (light) ───────────── */
-.experiences__head { margin-bottom: clamp(4rem, 8vw, 8rem); row-gap: 1.5rem; }
-.experiences__head > * { grid-column: 1 / -1; }
-.exp { row-gap: 2rem; align-items: center; }
-.exp + .exp { margin-top: clamp(4rem, 9vw, 9rem); }
-.exp__img, .exp__txt { grid-column: 1 / -1; }
-.exp__img { aspect-ratio: 4 / 3; }
-.exp__txt .h3 { font-size: var(--fs-h3); }
-@media (min-width: 62rem) {
-  .exp--a .exp__img { grid-column: 1 / span 7; aspect-ratio: 5 / 4; }
-  .exp--a .exp__txt { grid-column: 9 / span 4; }
-  .exp--b .exp__txt { grid-column: 2 / span 4; }
-  .exp--b .exp__img { grid-column: 7 / span 6; aspect-ratio: 4 / 5; }
 }
 
 /* ───────────── Story ───────────── */

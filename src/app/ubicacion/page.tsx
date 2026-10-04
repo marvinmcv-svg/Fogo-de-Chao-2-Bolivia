@@ -5,7 +5,7 @@ import { Visit } from "@/components/Visit";
 import { Button } from "@/components/ui/Button";
 import { Split } from "@/components/ui/Split";
 
-export const metadata: Metadata = pageMeta({ title: "Ubicación y horarios", description: "Boulevard del Centro Comercial Ventura Mall, Av. 4to Anillo esq. Av. San Martín, Santa Cruz de la Sierra. Almuerzo 11:30–16:00 y cena 19:00–23:00, todos los días.", path: "/ubicacion" });
+export const metadata: Metadata = pageMeta({ title: "Ubicación y horarios", description: "Boulevard del Centro Comercial Ventura Mall, Av. 4to Anillo esq. Av. San Martín, Santa Cruz de la Sierra. Almuerzo de 11:30 a 16:00 y cena de 19:00 a 23:00, todos los días.", path: "/ubicacion" });
 
 export default function UbicacionPage() {
   return (

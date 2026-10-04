@@ -2,9 +2,8 @@ import { ScrubText } from "../ui/ScrubText";
 
 export function Manifesto() {
   return (
-    <section className="section manifesto" aria-label="Filosofía">
+    <section className="section manifesto" aria-label="Filosofía" data-tone="ember">
       <div className="container grid">
-        <span className="eyebrow manifesto__eyebrow" data-fade>La tradición</span>
         <ScrubText
           as="h2"
           className="manifesto__text h2"

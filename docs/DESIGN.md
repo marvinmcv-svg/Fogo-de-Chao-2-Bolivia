@@ -44,3 +44,6 @@ Restoo stays the booking system of record. Concierge (AI-style receptionist) han
 
 ## 3D
 One tasteful WebGL layer: rising embers (instanced points, custom shader) behind the hero; desktop-only, lazy, killed under reduced-motion / low-power, CSS ember fallback.
+
+## Luxe revision
+Display face is now Bodoni Moda (opsz). Gradients are allowed and deliberate: `--grad-fire`, the fixed aurora (tone per section via `data-tone`), CSS hero glow under a WebGL fire shader. 3D: Token3D (three, RoomEnvironment), tilt cards, rail page-turn. Experiences is dark (theme lock), as a sticky stack.

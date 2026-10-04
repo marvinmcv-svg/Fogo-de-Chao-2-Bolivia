@@ -4,6 +4,9 @@ import { Hero } from "@/components/home/Hero";
 import { Manifesto } from "@/components/home/Manifesto";
 import { Ritual } from "@/components/home/Ritual";
 import { CutsRail } from "@/components/home/CutsRail";
+import { QuickBook } from "@/components/home/QuickBook";
+import { Marquee } from "@/components/home/Marquee";
+import { ZoomGallery } from "@/components/home/ZoomGallery";
 import { Experiences } from "@/components/home/Experiences";
 import { StoryTeaser } from "@/components/home/StoryTeaser";
 import { Visit } from "@/components/Visit";
@@ -19,9 +22,12 @@ export default function Home() {
     <>
       <JsonLd data={restaurantSchema()} />
       <Hero />
+      <QuickBook />
       <Manifesto />
       <Ritual />
       <CutsRail />
+      <Marquee />
+      <ZoomGallery />
       <Experiences />
       <StoryTeaser />
       <Visit />

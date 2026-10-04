@@ -6,9 +6,8 @@ import { mapsLink, nav, site, telLink, whatsappLink } from "@/lib/site";
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="footer">
+    <footer className="footer" data-tone="ember">
       <div className="container footer__cta stack-m">
-        <span className="eyebrow">Reservas</span>
         <Split as="h2" className="display" text={"Una mesa,\n*una brasa.*"} />
         <div className="btn-row">
           <Button href="/reservas">Reservar mesa</Button>
@@ -28,18 +27,18 @@ export function Footer() {
           </p>
         </div>
         <div className="footer__col" style={{ gridColumn: "span 12" }} data-cols>
-          <h2>Horarios · todos los días</h2>
+          <h2>Horarios, todos los días</h2>
           <ul className="num">
             {site.hours.map((h) => (
-              <li key={h.label}>{h.label} · {h.open} – {h.close}</li>
+              <li key={h.label}>{h.label}: {h.open} a {h.close}</li>
             ))}
           </ul>
         </div>
         <div className="footer__col" style={{ gridColumn: "span 12" }} data-cols>
           <h2>Contacto</h2>
           <ul>
-            <li><a href={whatsappLink()} target="_blank" rel="noopener noreferrer">WhatsApp · {site.phones.whatsapp.display}</a></li>
-            <li><a href={telLink(site.phones.landline.e164)}>Teléfono · {site.phones.landline.display}</a></li>
+            <li><a href={whatsappLink()} target="_blank" rel="noopener noreferrer">WhatsApp {site.phones.whatsapp.display}</a></li>
+            <li><a href={telLink(site.phones.landline.e164)}>Teléfono {site.phones.landline.display}</a></li>
             <li><a href={site.social.instagram} target="_blank" rel="noopener noreferrer">Instagram</a> · <a href={site.social.facebook} target="_blank" rel="noopener noreferrer">Facebook</a></li>
           </ul>
         </div>
@@ -57,6 +56,7 @@ export function Footer() {
         <div className="footer__bottom">
           <span>© {year} Fogo de Chão · {site.location}</span>
           <nav aria-label="Legal">
+            <Link href="/faq">Preguntas frecuentes</Link>
             <Link href="/privacidad">Privacidad</Link>
             <Link href="/terminos">Términos</Link>
           </nav>
