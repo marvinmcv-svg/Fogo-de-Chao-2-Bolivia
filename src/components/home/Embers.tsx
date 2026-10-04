@@ -115,7 +115,7 @@ export function Embers() {
             col = mix(col, ember, smoothstep(0.4, 0.75, heat));
             col = mix(col, amber, smoothstep(0.72, 1.0, heat));
             float vig = smoothstep(1.25, 0.25, length((uv - vec2(0.5 + uMouse.x*0.1, 0.0)) * vec2(1.0, 1.15)));
-            float a = clamp(heat * vig * 1.05, 0.0, 0.92);
+            float a = clamp(heat * vig * 0.42, 0.0, 0.4);
             gl_FragColor = vec4(col, a);
           }`,
       });

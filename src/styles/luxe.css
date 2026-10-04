@@ -61,7 +61,7 @@
 }
 
 /* ───────────── Hero: CSS fire (everyone) under the WebGL fire (capable desktops) ───────────── */
-.hero__glow { position: absolute; inset: -8%; mix-blend-mode: screen; opacity: 0.8; pointer-events: none; }
+.hero__glow { position: absolute; inset: -8%; mix-blend-mode: screen; opacity: 0.65; pointer-events: none; }
 .hero__glow i { position: absolute; border-radius: 50%; will-change: transform; }
 .hero__glow i:nth-child(1) { left: -6%; bottom: -32%; width: 72vmax; height: 52vmax; background: radial-gradient(closest-side, rgba(232, 86, 28, 0.7), transparent); animation: glow-a 15s ease-in-out infinite alternate; }
 .hero__glow i:nth-child(2) { right: -4%; bottom: -36%; width: 58vmax; height: 46vmax; background: radial-gradient(closest-side, rgba(255, 138, 61, 0.5), transparent); animation: glow-b 19s ease-in-out infinite alternate; }
