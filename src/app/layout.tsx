@@ -8,6 +8,8 @@ import "@/styles/pages.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Motion } from "@/components/Motion";
+import { Transition } from "@/components/Transition";
+import { Cursor } from "@/components/Cursor";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -33,6 +35,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main">{children}</main>
         <Footer />
         <Motion />
+        <Transition />
+        <Cursor />
       </body>
     </html>
   );

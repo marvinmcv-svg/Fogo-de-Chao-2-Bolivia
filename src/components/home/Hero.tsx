@@ -3,6 +3,7 @@ import { Split } from "../ui/Split";
 import { Button } from "../ui/Button";
 import { OpenNow } from "../OpenNow";
 import { HeroVideo } from "./HeroVideo";
+import { Embers } from "./Embers";
 import { site } from "@/lib/site";
 
 export function Hero() {
@@ -12,6 +13,7 @@ export function Hero() {
         <Image src="/media/img/hero-poster.webp" alt="" fill priority sizes="100vw" className="hero__poster" />
         <HeroVideo />
         <div className="hero__scrim" />
+        <Embers />
       </div>
 
       <div className="container hero__inner">

@@ -25,13 +25,13 @@ export function Button({ variant = "primary", arrow = true, children, className 
     const { prefetch: _p, replace: _r, scroll: _s, shallow: _sh, ...anchor } = rest as Record<string, unknown>;
     void _p; void _r; void _s; void _sh;
     return (
-      <a className={cls} href={href as string} target={href.toString().startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" {...(anchor as object)}>
+      <a className={cls} data-magnetic href={href as string} target={href.toString().startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" {...(anchor as object)}>
         {content}
       </a>
     );
   }
   return (
-    <Link className={cls} href={href} {...rest}>
+    <Link className={cls} data-magnetic href={href} {...rest}>
       {content}
     </Link>
   );

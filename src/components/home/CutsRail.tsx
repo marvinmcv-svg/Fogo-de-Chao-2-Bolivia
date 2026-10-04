@@ -23,7 +23,16 @@ export function CutsRail() {
       const t = track.current!;
       const dist = () => t.scrollWidth - window.innerWidth;
       const st = { trigger: root.current, start: "top top", end: () => `+=${dist()}`, scrub: 0.7, pin: true, invalidateOnRefresh: true, anticipatePin: 1 };
-      gsap.to(t, { x: () => -dist(), ease: "none", scrollTrigger: st });
+      const travel = gsap.to(t, { x: () => -dist(), ease: "none", scrollTrigger: st });
+      // Each photo drifts against the rail's motion, so the cuts feel set into the frame rather than pasted on.
+      gsap.utils.toArray<HTMLElement>(".cut", t).forEach((card) => {
+        const img = card.querySelector<HTMLElement>(".cut__img img");
+        if (!img) return;
+        gsap.fromTo(img, { xPercent: -7 }, {
+          xPercent: 7, ease: "none",
+          scrollTrigger: { trigger: card, containerAnimation: travel, start: "left right", end: "right left", scrub: true },
+        });
+      });
       gsap.fromTo(bar.current, { scaleX: 0 }, { scaleX: 1, ease: "none", scrollTrigger: { ...st, pin: false, anticipatePin: 0 } });
     });
     return () => mm.revert();
