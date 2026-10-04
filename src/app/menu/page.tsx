@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
+import { JsonLd, breadcrumbSchema, pageMeta } from "@/lib/seo";
 import { PageHero } from "@/components/PageHero";
 import { MenuIndex } from "@/components/menu/MenuIndex";
 import { Split } from "@/components/ui/Split";
 import { Button } from "@/components/ui/Button";
 import { whatsappLink } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Menú",
-  description: "Experiencia Churrasco, platos a la carta, cócteles tropicales, postres, Bar Fogo y vinos en Fogo de Chão Bolivia.",
-  alternates: { canonical: "/menu" },
-};
+export const metadata: Metadata = pageMeta({ title: "Menú", description: "Experiencia Churrasco, platos a la carta, cócteles tropicales, postres, Bar Fogo y vinos en Fogo de Chão Bolivia.", path: "/menu" });
 
 export default function MenuPage() {
   return (
     <>
+      <JsonLd data={breadcrumbSchema([{ name: "Menú", path: "/menu" }])} />
       <PageHero eyebrow="Nuestro menú" title={"Una muestra\n*del sur de Brasil.*"} lede="Seis maneras de recorrer la mesa." />
       <MenuIndex />
       <section className="section">

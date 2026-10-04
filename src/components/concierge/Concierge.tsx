@@ -123,7 +123,7 @@ export function Concierge() {
   }
 
   return (
-    <>
+    <aside aria-label="Contacto rápido: concierge y WhatsApp">
       <div className="dock">
         <button ref={launcherRef} type="button" className="dock__concierge" aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
           <i aria-hidden="true" /> Concierge
@@ -182,6 +182,6 @@ export function Concierge() {
         </form>
         <p className="sheet__note">Asistente automático. No confirma reservas ni reemplaza al equipo.</p>
       </section>
-    </>
+    </aside>
   );
 }

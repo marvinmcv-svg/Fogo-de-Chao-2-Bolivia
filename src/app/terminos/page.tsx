@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { JsonLd, breadcrumbSchema, pageMeta } from "@/lib/seo";
 import { PageHero } from "@/components/PageHero";
 
-export const metadata: Metadata = { title: "Términos de uso", alternates: { canonical: "/terminos" } };
+export const metadata: Metadata = pageMeta({ title: "Términos de uso", description: "Condiciones de uso del sitio de Fogo de Chão Bolivia.", path: "/terminos" });
 
 export default function TerminosPage() {
   return (
     <>
+      <JsonLd data={breadcrumbSchema([{ name: "Términos de uso", path: "/terminos" }])} />
       <PageHero eyebrow="Legal" title={"Términos\n*de uso.*"} />
       <section className="section prose" style={{ paddingTop: 0 }}>
         <div className="container">

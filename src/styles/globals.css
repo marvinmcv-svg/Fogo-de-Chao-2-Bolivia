@@ -9,10 +9,10 @@
   --ember: #e8561c;
   --ember-deep: #b83f10;
   --sim: #2f7d4f;
-  --nao: #b3261e;
+  --nao: #a8221a;
 
-  --font-display: "Instrument Serif", "Times New Roman", serif;
-  --font-sans: "Hanken Grotesk Variable", "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-display-face), "Times New Roman", serif;
+  --font-sans: var(--font-sans-face), system-ui, -apple-system, "Segoe UI", sans-serif;
 
   --fs-meta: 0.72rem;
   --fs-body: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
@@ -128,6 +128,7 @@ html.lenis, html.lenis body { height: auto; }
 .btn-ghost { border: 1px solid var(--line); color: var(--bone); }
 .btn-ghost::before { background: var(--bone); }
 .btn-ghost:hover, .btn-ghost:focus-visible { color: var(--char); border-color: var(--bone); }
+.light .display em, .light .h1 em, .light .h2 em, .light .h3 em { color: var(--ember-deep); } /* #e8561c on bone is 2.9:1; the deeper ember is ≥5:1 */
 .light .btn-ghost { border-color: rgba(13, 10, 8, 0.3); color: var(--char); }
 .light .btn-ghost::before { background: var(--char); }
 .light .btn-ghost:hover { color: var(--bone); }
@@ -149,12 +150,18 @@ html.lenis, html.lenis body { height: auto; }
 .w > span { display: inline-block; will-change: transform; }
 
 @media (prefers-reduced-motion: no-preference) {
-  html.js [data-split]:not(.is-in) .w > span { transform: translateY(112%); }
-  html.js [data-fade]:not(.is-in) { opacity: 0; transform: translateY(24px); }
+  html.js [data-split]:not([data-intro]):not(.is-in) .w > span { transform: translateY(112%); }
+  html.js [data-fade]:not([data-intro]):not(.is-in) { opacity: 0; transform: translateY(24px); }
+  /* Above the fold: pure CSS so the LCP content appears at first paint, independent of script load. */
+  [data-intro] .w > span { animation: rise 1.15s var(--ease) both; animation-delay: calc(var(--d, 0s) + var(--i, 0) * 50ms); }
+  [data-fade][data-intro] { animation: fade-up 1.1s var(--ease) both; animation-delay: var(--d, 0s); }
   html.js [data-mask]:not(.is-in) { clip-path: inset(0 0 100% 0); }
   html.js [data-mask]:not(.is-in) img,
   html.js [data-mask]:not(.is-in) video { transform: scale(1.25); }
 }
+
+@keyframes rise { from { transform: translateY(112%); } to { transform: none; } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
 
 .mask { position: relative; overflow: hidden; background: var(--coal); }
 .mask > img, .mask > video { width: 100%; height: 100%; object-fit: cover; }
@@ -244,7 +251,9 @@ html.lenis, html.lenis body { height: auto; }
 @media (min-width: 64rem) { .footer__col[data-cols] { grid-column: span 3 !important; } }
 
 @media (prefers-reduced-motion: no-preference) {
-  html.js [data-scrub] .sw { opacity: 0.16; }
+  /* Resting floors chosen to stay ≥3:1 (large text) even before the scrub reaches a word; the ember phrase starts brighter. */
+  html.js [data-scrub] .sw { opacity: 0.42; }
+  html.js [data-scrub] em .sw { opacity: 0.75; }
 }
 .open-now { display: inline-flex; align-items: center; gap: 0.6rem; font-size: var(--fs-meta); letter-spacing: 0.18em; text-transform: uppercase; color: var(--bone); }
 .open-now i { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--smoke); }

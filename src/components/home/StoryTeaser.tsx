@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { LazyVideo } from "../ui/LazyVideo";
 import { Split } from "../ui/Split";
 import { Button } from "../ui/Button";
 
@@ -8,9 +9,7 @@ export function StoryTeaser() {
       <div className="container grid">
         <div className="story__film mask" data-mask>
           <Image src="/media/img/story-poster.webp" alt="" fill sizes="(min-width: 62rem) 30vw, 80vw" />
-          <video autoPlay muted loop playsInline preload="none" aria-hidden="true" tabIndex={-1}>
-            <source src="/media/video/fuego-vertical.mp4" type="video/mp4" />
-          </video>
+          <LazyVideo src="/media/video/fuego-vertical.mp4" />
         </div>
         <div className="story__txt stack-m">
           <span className="eyebrow" data-fade>Nuestra historia</span>

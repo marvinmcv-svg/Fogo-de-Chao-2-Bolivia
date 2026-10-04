@@ -15,7 +15,8 @@
 @media (min-width: 62rem) {
   .menuidx { grid-template-columns: 7fr 5fr; gap: 6vw; }
   .menuidx__row { padding-block: clamp(2.5rem, 5vw, 4.5rem); }
-  .menuidx__row .body, .menuidx__row .menuidx__name { opacity: 0.38; transition: opacity 0.5s var(--ease), color 0.5s, transform 0.6s var(--ease); }
+  .menuidx__row .body { opacity: 0.8; transition: opacity 0.5s var(--ease); }
+  .menuidx__row .menuidx__name { opacity: 0.55; transition: opacity 0.5s var(--ease), color 0.5s, transform 0.6s var(--ease); }
   .menuidx__row.is-active .body, .menuidx__row.is-active .menuidx__name { opacity: 1; }
   .menuidx__row.is-active .menuidx__name { color: var(--bone); transform: translateX(1rem); }
   .menuidx__thumb { display: none; }

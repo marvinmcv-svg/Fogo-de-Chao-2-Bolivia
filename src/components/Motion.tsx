@@ -46,7 +46,7 @@ export function Motion() {
 
     const build = () => {
       ctx = gsap.context(() => {
-        gsap.utils.toArray<HTMLElement>("[data-split]").forEach((el) => {
+        gsap.utils.toArray<HTMLElement>("[data-split]:not([data-intro])").forEach((el) => {
           const spans = el.querySelectorAll<HTMLElement>(".w > span");
           const delay = Number(el.dataset.delay || 0);
           ScrollTrigger.create({
@@ -58,7 +58,7 @@ export function Motion() {
           });
         });
 
-        gsap.utils.toArray<HTMLElement>("[data-fade]").forEach((el) => {
+        gsap.utils.toArray<HTMLElement>("[data-fade]:not([data-intro])").forEach((el) => {
           const delay = Number(el.dataset.delay || 0);
           ScrollTrigger.create({
             trigger: el, start: "top 92%", once: true,
@@ -83,7 +83,7 @@ export function Motion() {
         });
 
         gsap.utils.toArray<HTMLElement>("[data-scrub]").forEach((el) => {
-          gsap.fromTo(el.querySelectorAll(".sw"), { opacity: 0.16 }, {
+          gsap.fromTo(el.querySelectorAll(".sw"), { opacity: (_i: number, w: Element) => (w.closest("em") ? 0.75 : 0.42) }, {
             opacity: 1, ease: "none", stagger: 0.12,
             scrollTrigger: { trigger: el, start: "top 82%", end: "bottom 48%", scrub: true },
           });

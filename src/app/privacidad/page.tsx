@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { JsonLd, breadcrumbSchema, pageMeta } from "@/lib/seo";
 import { PageHero } from "@/components/PageHero";
 import { site } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Política de privacidad", alternates: { canonical: "/privacidad" } };
+export const metadata: Metadata = pageMeta({ title: "Política de privacidad", description: "Qué datos recopila este sitio y para qué se usan.", path: "/privacidad" });
 
 export default function PrivacidadPage() {
   return (
     <>
+      <JsonLd data={breadcrumbSchema([{ name: "Política de privacidad", path: "/privacidad" }])} />
       <PageHero eyebrow="Legal" title={"Política de\n*privacidad.*"} />
       <section className="section prose" style={{ paddingTop: 0 }}>
         <div className="container">

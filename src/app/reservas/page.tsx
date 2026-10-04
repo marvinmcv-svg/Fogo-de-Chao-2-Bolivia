@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
+import { JsonLd, breadcrumbSchema, pageMeta } from "@/lib/seo";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/ui/Button";
 import { site, telLink, whatsappLink } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Reservas",
-  description: "Reserva tu mesa en Fogo de Chão Bolivia, Ventura Mall, Santa Cruz de la Sierra. Reserva en línea o por WhatsApp.",
-  alternates: { canonical: "/reservas" },
-};
+export const metadata: Metadata = pageMeta({ title: "Reservas", description: "Reserva tu mesa en Fogo de Chão Bolivia, Ventura Mall, Santa Cruz de la Sierra. Reserva en línea o por WhatsApp.", path: "/reservas" });
 
 export default function ReservasPage() {
   return (
     <>
+      <JsonLd data={breadcrumbSchema([{ name: "Reservas", path: "/reservas" }])} />
       <PageHero eyebrow="Reservas" title={"Reserva\n*tu mesa.*"} lede="Reserva en línea, o escríbenos por WhatsApp si prefieres hablar con alguien." />
       <section className="section book" style={{ paddingTop: 0 }}>
         <div className="container book__grid">

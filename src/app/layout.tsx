@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource/instrument-serif/400.css";
-import "@fontsource/instrument-serif/400-italic.css";
-import "@fontsource-variable/hanken-grotesk/index.css";
+import localFont from "next/font/local";
 import "@/styles/globals.css";
 import "@/styles/home.css";
 import "@/styles/pages.css";
@@ -13,11 +11,36 @@ import { Transition } from "@/components/Transition";
 import { Cursor } from "@/components/Cursor";
 import { Concierge } from "@/components/concierge/Concierge";
 import { site } from "@/lib/site";
+import { JsonLd, websiteSchema } from "@/lib/seo";
+
+// Latin subset only (covers ñ á é í ó ú ã ç ¿ ¡). next/font preloads these and generates a size-matched fallback to avoid layout shift.
+const display = localFont({
+  src: [
+    { path: "../../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2", weight: "400", style: "italic" },
+  ],
+  variable: "--font-display-face",
+  display: "swap",
+  fallback: ["Times New Roman", "serif"],
+});
+const sans = localFont({
+  src: "../../node_modules/@fontsource-variable/hanken-grotesk/files/hanken-grotesk-latin-wght-normal.woff2",
+  weight: "100 900",
+  variable: "--font-sans-face",
+  display: "swap",
+  fallback: ["system-ui", "sans-serif"],
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: { default: `${site.name} · Rodizio brasileño en Santa Cruz`, template: `%s · ${site.name}` },
   description: site.description,
+  applicationName: site.name,
+  alternates: { canonical: "/" },
+  openGraph: { type: "website", siteName: site.name, locale: site.locale, url: "/", title: `${site.name} · Rodizio brasileño en Santa Cruz`, description: site.description },
+  twitter: { card: "summary_large_image", title: `${site.name} · Rodizio brasileño en Santa Cruz`, description: site.description },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
+  formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = {
@@ -27,7 +50,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es" className={`${display.variable} ${sans.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>
@@ -36,6 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main id="main">{children}</main>
         <Footer />
+        <JsonLd data={websiteSchema()} />
         <Motion />
         <Transition />
         <Concierge />

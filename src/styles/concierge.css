@@ -71,3 +71,9 @@
   .sheet, .sheet.is-open { transition: none; transform: none; }
   .dock__concierge i, .msg--typing i { animation: none; }
 }
+
+/* Keep the fixed dock from covering content that sits at the very bottom of the viewport/page on small screens */
+@media (max-width: 61.99rem) {
+  .hero__inner { padding-bottom: 5.5rem; }
+  .footer__bottom { padding-bottom: 5.5rem; }
+}

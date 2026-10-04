@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
+import { JsonLd, breadcrumbSchema, pageMeta } from "@/lib/seo";
 import Image from "next/image";
 import { PageHero } from "@/components/PageHero";
+import { LazyVideo } from "@/components/ui/LazyVideo";
 import { Split } from "@/components/ui/Split";
 import { Button } from "@/components/ui/Button";
 
-export const metadata: Metadata = {
-  title: "Nuestra historia",
-  description: "De la Sierra Gaucha, en el sur de Brasil, a Santa Cruz de la Sierra: la historia de Fogo de Chão y la tradición del churrasco.",
-  alternates: { canonical: "/historia" },
-};
+export const metadata: Metadata = pageMeta({ title: "Nuestra historia", description: "De la Sierra Gaucha, en el sur de Brasil, a Santa Cruz de la Sierra: la historia de Fogo de Chão y la tradición del churrasco.", path: "/historia" });
 
 const chapters = [
   { place: "Sierra Gaucha", text: "Los fundadores de Fogo de Chão crecieron en una granja tradicional en el sur de Brasil, en la Sierra Gaucha. Allí aprendieron a cocinar en la tradición del churrasco, que se convertiría en la columna vertebral de su historia." },
@@ -24,15 +22,14 @@ const chapters = [
 export default function HistoriaPage() {
   return (
     <>
+      <JsonLd data={breadcrumbSchema([{ name: "Nuestra historia", path: "/historia" }])} />
       <PageHero eyebrow="Nuestra historia" title={"La rica tradición\n*del churrasco.*"} lede="De una granja en la Sierra Gaucha a la mesa de Santa Cruz." />
       <section className="section hist">
         <div className="container hist__grid">
           <aside className="hist__aside">
             <div className="hist__film mask" data-mask>
               <Image src="/media/img/rodizio-poster.webp" alt="" fill sizes="(min-width: 62rem) 28vw, 80vw" />
-              <video autoPlay muted loop playsInline preload="none" aria-hidden="true" tabIndex={-1}>
-                <source src="/media/video/rodizio-vertical.mp4" type="video/mp4" />
-              </video>
+              <LazyVideo src="/media/video/rodizio-vertical.mp4" />
             </div>
           </aside>
           <ol className="hist__list">

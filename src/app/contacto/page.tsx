@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
+import { JsonLd, breadcrumbSchema, pageMeta } from "@/lib/seo";
 import { PageHero } from "@/components/PageHero";
 import { ContactForm } from "@/components/ContactForm";
 import { mapsLink, site, telLink, whatsappLink } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Contacto",
-  description: "Escríbenos o llámanos: reservas, eventos, sugerencias. WhatsApp, teléfono y formulario de contacto de Fogo de Chão Bolivia.",
-  alternates: { canonical: "/contacto" },
-};
+export const metadata: Metadata = pageMeta({ title: "Contacto", description: "Escríbenos o llámanos: reservas, eventos, sugerencias. WhatsApp, teléfono y formulario de contacto de Fogo de Chão Bolivia.", path: "/contacto" });
 
 export default function ContactoPage() {
   return (
     <>
+      <JsonLd data={breadcrumbSchema([{ name: "Contacto", path: "/contacto" }])} />
       <PageHero eyebrow="Contacto" title={"Hablemos."} lede="Reservas, eventos, sugerencias. Respondemos lo antes posible." />
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container grid contact">
