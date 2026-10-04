@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ritual } from "@/lib/site";
 import { Split } from "../ui/Split";
+import { Token3D } from "./Token3D";
 
 export function Ritual() {
   const [active, setActive] = useState(0);
+  const [is3d, setIs3d] = useState(false);
   const stepRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const on3d = useCallback((v: boolean) => setIs3d(v), []);
 
   useEffect(() => {
     const io = new IntersectionObserver(
@@ -24,10 +27,11 @@ export function Ritual() {
   const nao = ritual[active].state === "nao";
 
   return (
-    <section className="section ritual" aria-labelledby="ritual-title">
+    <section className="section ritual" aria-labelledby="ritual-title" data-tone="garnet">
       <div className="container ritual__grid">
         <div className="ritual__stage">
-          <div className={`token${nao ? " is-nao" : ""}`} role="img" aria-label={nao ? "Token en rojo: pausa" : "Token en verde: los cortes continúan"}>
+          <div className={`token${nao ? " is-nao" : ""}${is3d ? " has-3d" : ""}`} role="img" aria-label={nao ? "Token en rojo: pausa" : "Token en verde: los cortes continúan"}>
+            <Token3D nao={nao} onReady={on3d} />
             <div className="token__disc">
               <div className="token__face token__face--sim">
                 <small>Sim</small>
@@ -39,13 +43,13 @@ export function Ritual() {
               </div>
             </div>
           </div>
-          <p className="meta ritual__state" aria-live="polite">{nao ? "Rojo · pausa" : "Verde · servicio continuo"}</p>
+          <p className="meta ritual__state" aria-live="polite">{nao ? "Rojo: pausa" : "Verde: servicio continuo"}</p>
         </div>
 
         <div className="ritual__copy">
           <span className="eyebrow" data-fade>El ritual</span>
           <Split as="h2" className="h2" id="ritual-title" text="Tú marcas *el ritmo.*" />
-          <ol className="ritual__steps">
+          <ol className="ritual__steps" data-progress>
             {ritual.map((s, i) => (
               <li
                 key={s.n}
@@ -53,7 +57,7 @@ export function Ritual() {
                 ref={(el) => { stepRefs.current[i] = el; }}
                 className={`step${i === active ? " is-active" : ""}`}
               >
-                <span className="num step__n">{s.n}</span>
+                <span className="step__node" aria-hidden="true" />
                 <div>
                   <h3 className="h3">{s.title}</h3>
                   <p className="body">{s.text}</p>

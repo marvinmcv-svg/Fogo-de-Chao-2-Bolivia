@@ -48,7 +48,7 @@ export async function POST(req: Request) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       // `text` makes this work out of the box with Slack/Discord-style incoming webhooks; full payload for Zapier/Make.
-      body: JSON.stringify({ ...lead, text: `Nuevo contacto (${lead.source}) — ${lead.name} · ${lead.phone}${lead.email ? ` · ${lead.email}` : ""}\nMotivo: ${lead.topic}\n${lead.message}` }),
+      body: JSON.stringify({ ...lead, text: `Nuevo contacto (${lead.source}): ${lead.name} · ${lead.phone}${lead.email ? ` · ${lead.email}` : ""}\nMotivo: ${lead.topic}\n${lead.message}` }),
       signal: AbortSignal.timeout(8000),
     });
     return NextResponse.json({ ok: r.ok, delivered: r.ok }, { status: r.ok ? 200 : 502 });

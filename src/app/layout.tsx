@@ -3,12 +3,13 @@ import localFont from "next/font/local";
 import "@/styles/globals.css";
 import "@/styles/home.css";
 import "@/styles/pages.css";
+import "@/styles/luxe.css";
 import "@/styles/concierge.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Motion } from "@/components/Motion";
 import { Transition } from "@/components/Transition";
-import { Cursor } from "@/components/Cursor";
+import { Aurora } from "@/components/Aurora";
 import { Concierge } from "@/components/concierge/Concierge";
 import { site } from "@/lib/site";
 import { JsonLd, websiteSchema } from "@/lib/seo";
@@ -16,8 +17,8 @@ import { JsonLd, websiteSchema } from "@/lib/seo";
 // Latin subset only (covers ñ á é í ó ú ã ç ¿ ¡). next/font preloads these and generates a size-matched fallback to avoid layout shift.
 const display = localFont({
   src: [
-    { path: "../../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2", weight: "400", style: "normal" },
-    { path: "../../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2", weight: "400", style: "italic" },
+    { path: "../../node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-opsz-normal.woff2", weight: "400 900", style: "normal" },
+    { path: "../../node_modules/@fontsource-variable/bodoni-moda/files/bodoni-moda-latin-opsz-italic.woff2", weight: "400 900", style: "italic" },
   ],
   variable: "--font-display-face",
   display: "swap",
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>
       <body>
+        <Aurora />
         <a className="skip-link" href="#main">Saltar al contenido</a>
         <Header />
         <main id="main">{children}</main>
@@ -63,7 +65,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Motion />
         <Transition />
         <Concierge />
-        <Cursor />
       </body>
     </html>
   );

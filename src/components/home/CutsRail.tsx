@@ -32,6 +32,15 @@ export function CutsRail() {
       const dist = () => t.scrollWidth - window.innerWidth;
       const st = { trigger: root.current, start: "top top", end: () => `+=${dist()}`, scrub: 0.7, pin: true, invalidateOnRefresh: true, anticipatePin: 1 };
       const travel = gsap.to(t, { x: () => -dist(), ease: "none", scrollTrigger: st });
+      // 3D: each photo swings through the rail like a page turning and squares up as it crosses the centre; copy stays flat.
+      gsap.utils.toArray<HTMLElement>(".cut", t).forEach((card) => {
+        const photo = card.querySelector<HTMLElement>(".cut__img");
+        if (!photo) return;
+        gsap.fromTo(photo, { rotationY: 24 }, {
+          rotationY: -24, ease: "none", transformPerspective: 1100, transformOrigin: "50% 50%",
+          scrollTrigger: { trigger: card, containerAnimation: travel, start: "left right", end: "right left", scrub: true },
+        });
+      });
       // Keyboard: focusing something that is currently off-screen in the rail scrolls the page to bring it into view.
       const onFocusIn = (e: FocusEvent) => {
         const el = e.target as HTMLElement;
@@ -59,7 +68,7 @@ export function CutsRail() {
   }, []);
 
   return (
-    <section ref={root} className="cuts" aria-labelledby="cuts-title">
+    <section ref={root} className="cuts" aria-labelledby="cuts-title" data-tone="ember">
       <div className="cuts__track" ref={track}>
         <div className="cuts__intro">
           <span className="eyebrow" data-fade>Los cortes</span>
@@ -70,13 +79,12 @@ export function CutsRail() {
           </p>
         </div>
 
-        {cuts.map((c, i) => (
+        {cuts.map((c) => (
           <article className="cut" key={c.name}>
             <div className="cut__img mask">
               <Image src={c.image} alt={`${c.name}: ${c.note}`} fill sizes="(min-width: 62rem) 32vw, 78vw" />
             </div>
             <div className="cut__txt">
-              <span className="num meta">0{i + 1}</span>
               <h3 className="display cut__name">{c.name}</h3>
               <p className="body">{c.note}</p>
             </div>

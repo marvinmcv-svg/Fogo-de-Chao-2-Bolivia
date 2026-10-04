@@ -16,7 +16,7 @@ export function Visit({ heading = "Te *esperamos.*" }: { heading?: string }) {
           <dl className="visit__hours num" data-fade>
             <dt className="meta">Todos los días</dt>
             {site.hours.map((h) => (
-              <dd key={h.label}><span>{h.label}</span><span>{h.open} – {h.close}</span></dd>
+              <dd key={h.label}><span>{h.label}</span><span>{h.open} a {h.close}</span></dd>
             ))}
           </dl>
           <OpenNow />

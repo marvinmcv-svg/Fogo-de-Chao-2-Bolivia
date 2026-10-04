@@ -6,7 +6,7 @@ import { prefersReducedMotion, registerGsap } from "@/lib/motion";
 
 const labels: Record<string, string> = {
   "/": "Inicio", "/menu": "Menú", "/historia": "Historia", "/ubicacion": "Ubicación",
-  "/reservas": "Reservas", "/contacto": "Contacto", "/privacidad": "Privacidad", "/terminos": "Términos",
+  "/reservas": "Reservas", "/eventos": "Eventos", "/faq": "Preguntas", "/contacto": "Contacto", "/privacidad": "Privacidad", "/terminos": "Términos",
 };
 
 /**

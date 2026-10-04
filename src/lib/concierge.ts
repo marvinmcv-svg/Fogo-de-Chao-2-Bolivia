@@ -7,7 +7,7 @@ import { mapsLink, menuSections, site, telLink, whatsappLink } from "./site";
  */
 
 export type Action = { label: string; href: string; external?: boolean };
-export type Reply = { text: string; actions?: Action[]; chips?: string[]; startLead?: boolean };
+export type Reply = { text: string; actions?: Action[]; chips?: string[]; startLead?: boolean; startBooking?: boolean };
 
 export const chips = {
   reserve: "Reservar una mesa",
@@ -16,6 +16,7 @@ export const chips = {
   groups: "Grupos y celebraciones",
   human: "Hablar con una persona",
   lead: "Dejar mis datos",
+  book: "Armar mi solicitud aquí",
 } as const;
 
 export const greeting: Reply = {
@@ -75,6 +76,7 @@ const intents: Intent[] = [
     test: /(reserv|mesa|agendar|apartar|book|cupo|disponib)/,
     build: () => ({
       text: `Puedes reservar en línea en pocos pasos. Atendemos todos los días: ${hoursText}. Una consulta por este chat no es una reserva hasta que el restaurante la confirme.`,
+      chips: [chips.book],
       actions: [reserveAction, wa("Hola, me gustaría hacer una reserva en Fogo de Chão.")],
     }),
   },
@@ -117,10 +119,81 @@ const intents: Intent[] = [
   },
 ];
 
+/* ───────── English (visitors from abroad). Same verified facts, same refusals. ───────── */
+
+const enChips = ["Book a table", "Opening hours", "Where are you?"];
+const looksEnglish = (t: string) =>
+  /\b(hello|hi|hey|hours|opening|open|closing|close|book|booking|reservation|table|where|address|location|directions|price|prices|how much|thanks|thank you|do you|can i|what time)\b/.test(t) &&
+  !/\b(el|la|los|las|que|para|por|del|quiero|quisiera|hola|gracias|donde|cuando|puedo)\b/.test(t);
+
+function englishReply(t: string): Reply {
+  const hoursEn = site.hours.map((h) => `${h.label === "Almuerzo" ? "lunch" : "dinner"} from ${h.open} to ${h.close}`).join(" and ");
+  if (/(price|prices|how much)/.test(t)) {
+    return { text: "I don't have confirmed prices at the moment. The team can share current ones on WhatsApp.", actions: [wa("Hello, could you share current prices for Fogo de Chão?")], chips: enChips };
+  }
+  if (/(hours|opening|open|closing|close|what time)/.test(t)) {
+    return { text: `We are open every day: ${hoursEn} (Bolivia time). ${openStatus().open ? "We are open right now." : "We are closed right now."}`, actions: [reserveAction], chips: enChips };
+  }
+  if (/(where|address|location|directions)/.test(t)) {
+    return { text: `We are at ${site.address.line1}, ${site.address.line2}, ${site.address.city}.`, actions: [{ label: "Directions", href: mapsLink, external: true }], chips: enChips };
+  }
+  if (/(book|booking|reservation|table)/.test(t)) {
+    return { text: "You can book online, or message the team on WhatsApp. A chat message is not a reservation until the restaurant confirms it.", actions: [reserveAction, wa("Hello, I would like to book a table at Fogo de Chão.")], chips: enChips };
+  }
+  return { text: "Welcome to Fogo de Chão. I'm the restaurant's automatic assistant. I can help with bookings, hours and directions.", chips: enChips };
+}
+
+/* ───────── Guided booking request. Collects intent only; it never confirms a table. ───────── */
+
+export type Book = { step: "guests" | "shift" | "date"; guests?: string; shift?: string } | null;
+
+export const guestChips = ["1 a 2", "3 a 4", "5 a 6", "7 a 10", "Más de 10"];
+
+/** Today / tomorrow / next Saturday / next Sunday, in Bolivia time. */
+export function dateChips(now = new Date()): string[] {
+  const day = (d: Date) => new Intl.DateTimeFormat("es-BO", { timeZone: "America/La_Paz", weekday: "long", day: "numeric", month: "long" }).format(d);
+  const lp = new Date(now.toLocaleString("en-US", { timeZone: "America/La_Paz" }));
+  const next = (dow: number) => { const d = new Date(lp); d.setDate(d.getDate() + ((dow - d.getDay() + 7) % 7 || 7)); return d; };
+  return ["Hoy", "Mañana", day(next(6)), day(next(0))];
+}
+
+export function bookStart(): { state: Book; reply: Reply } {
+  return { state: { step: "guests" }, reply: { text: "Con gusto armamos tu solicitud. ¿Para cuántas personas?", chips: guestChips } };
+}
+
+export function bookStep(state: NonNullable<Book>, input: string): { state: Book; reply: Reply } {
+  const t = norm(input);
+  if (state.step === "guests") {
+    const n = Number((t.match(/\d+/) ?? [])[0]);
+    if (/(mas de 10|grupo|muchos)/.test(t) || n > 10) {
+      return { state: null, reply: { text: "Para grupos grandes lo coordinamos directamente con el equipo. Déjame tus datos y te contactan.", startLead: true } };
+    }
+    if (!n) return { state, reply: { text: "No pude leer el número. ¿Para cuántas personas?", chips: guestChips } };
+    return { state: { step: "shift", guests: input.trim() }, reply: { text: "Perfecto. ¿Almuerzo o cena?", chips: site.hours.map((h) => `${h.label} (${h.open} a ${h.close})`) } };
+  }
+  if (state.step === "shift") {
+    const h = site.hours.find((x) => t.includes(norm(x.label)));
+    if (!h) return { state, reply: { text: "¿Prefieres almuerzo o cena?", chips: site.hours.map((x) => `${x.label} (${x.open} a ${x.close})`) } };
+    return { state: { step: "date", guests: state.guests, shift: h.label }, reply: { text: "¿Para qué día?", chips: dateChips() } };
+  }
+  const people = state.guests === "1" ? "1 persona" : `${state.guests} personas`;
+  const when = /^(hoy|manana)$/.test(t) ? t === "hoy" ? "hoy" : "mañana" : `el ${input.trim().toLowerCase()}`;
+  const shift = (state.shift ?? "").toLowerCase();
+  const note = `Hola, quisiera reservar para ${people}, ${when}, en el turno de ${shift}. ¿Tienen disponibilidad?`;
+  return {
+    state: null,
+    reply: {
+      text: `Listo: ${people}, ${when}, ${shift}. Esto es una solicitud, no una reserva: el restaurante la confirma. Envíala por WhatsApp (ya está escrita) o consulta disponibilidad en línea.`,
+      actions: [{ label: "Enviar por WhatsApp", href: whatsappLink(note), external: true }, reserveAction],
+    },
+  };
+}
+
 /** Returns a confident answer, or null when the message is outside what we can answer from verified facts. */
 export function ruleReply(input: string): Reply | null {
   const t = norm(input).trim();
   if (!t) return null;
+  if (looksEnglish(t)) return englishReply(t);
   const hit = intents.find((i) => i.test.test(t));
   return hit ? hit.build() : null;
 }

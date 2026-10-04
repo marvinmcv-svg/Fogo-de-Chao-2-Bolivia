@@ -5,6 +5,13 @@ import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import { prefersReducedMotion, registerGsap, smooth } from "@/lib/motion";
 
+/** Aurora palettes per section tone (rgb() so GSAP can interpolate the custom properties). */
+const tones = {
+  ember: ["rgb(232, 86, 28)", "rgb(140, 36, 20)", "rgb(59, 13, 11)"],
+  garnet: ["rgb(150, 40, 28)", "rgb(232, 86, 28)", "rgb(42, 9, 7)"],
+  amber: ["rgb(240, 160, 75)", "rgb(232, 86, 28)", "rgb(110, 24, 16)"],
+} as const;
+
 const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 /**
@@ -17,7 +24,7 @@ const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : use
 export function Motion() {
   const pathname = usePathname();
 
-  // Smooth scroll — once.
+  // Smooth scroll, once.
   useEffect(() => {
     const { gsap, ScrollTrigger } = registerGsap();
     if (prefersReducedMotion()) return;
@@ -34,7 +41,7 @@ export function Motion() {
     };
   }, []);
 
-  // Entrances — per route.
+  // Entrances, per route.
   useIsoLayoutEffect(() => {
     const { gsap, ScrollTrigger } = registerGsap();
     window.scrollTo(0, 0);
@@ -105,6 +112,35 @@ export function Motion() {
           gsap.to(hero.querySelector(".hero__media"), { scale: 1.18, yPercent: 10, ease: "none", scrollTrigger: st });
           gsap.to(hero.querySelector(".hero__inner"), { yPercent: -9, opacity: 0.15, ease: "none", scrollTrigger: st });
         }
+
+        // Atmosphere: the fixed aurora re-tints as each toned section crosses the middle of the screen.
+        const aurora = document.querySelector<HTMLElement>(".aurora");
+        if (aurora) {
+          gsap.utils.toArray<HTMLElement>("[data-tone]").forEach((el) => {
+            const tone = tones[el.dataset.tone as keyof typeof tones];
+            if (!tone) return;
+            ScrollTrigger.create({
+              trigger: el, start: "top 55%", end: "bottom 45%",
+              onToggle: (self) => { if (self.isActive) gsap.to(aurora, { "--a1": tone[0], "--a2": tone[1], "--a3": tone[2], duration: 1.6, ease: "power2.inOut", overwrite: "auto" }); },
+            });
+          });
+        }
+
+        // Sticky stack (desktop): each panel recedes and darkens while the next slides over it.
+        if (window.matchMedia("(min-width: 62rem)").matches) {
+          const cards = gsap.utils.toArray<HTMLElement>("[data-stack]");
+          cards.slice(0, -1).forEach((card, i) => {
+            const trigger = cards[i + 1];
+            const st = { trigger, start: "top 88%", end: "top 14%", scrub: true };
+            gsap.to(card, { scale: 0.93, ease: "none", scrollTrigger: st });
+            gsap.to(card.querySelector(".stack__shade"), { opacity: 0.72, ease: "none", scrollTrigger: st });
+          });
+        }
+
+        // Ritual: the vertical line draws itself down the steps.
+        gsap.utils.toArray<HTMLElement>("[data-progress]").forEach((el) => {
+          ScrollTrigger.create({ trigger: el, start: "top 60%", end: "bottom 60%", scrub: true, onUpdate: (self) => el.style.setProperty("--p", self.progress.toFixed(3)) });
+        });
       });
     };
 
@@ -123,6 +159,68 @@ export function Motion() {
         el.addEventListener("pointerleave", reset);
         cleanups.push(() => { el.removeEventListener("pointermove", move); el.removeEventListener("pointerleave", reset); gsap.set(el, { clearProps: "x,y" }); });
       });
+    }
+
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      // Tilt + spotlight border: cards lean toward the pointer in 3D and a soft light follows it along the edge.
+      document.querySelectorAll<HTMLElement>("[data-tilt], .spot").forEach((el) => {
+        const tilt = el.hasAttribute("data-tilt");
+        const rx = tilt ? gsap.quickTo(el, "rotationX", { duration: 0.7, ease: "power3" }) : null;
+        const ry = tilt ? gsap.quickTo(el, "rotationY", { duration: 0.7, ease: "power3" }) : null;
+        if (tilt) gsap.set(el, { transformPerspective: 900 });
+        const move = (e: PointerEvent) => {
+          const r = el.getBoundingClientRect();
+          const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+          el.style.setProperty("--mx", `${(px * 100).toFixed(1)}%`);
+          el.style.setProperty("--my", `${(py * 100).toFixed(1)}%`);
+          rx?.((0.5 - py) * 9);
+          ry?.((px - 0.5) * 11);
+        };
+        const leave = () => { rx?.(0); ry?.(0); };
+        el.addEventListener("pointermove", move);
+        el.addEventListener("pointerleave", leave);
+        cleanups.push(() => { el.removeEventListener("pointermove", move); el.removeEventListener("pointerleave", leave); gsap.set(el, { clearProps: "transform" }); });
+      });
+
+      // Hero depth: the headline turns a few degrees in 3D and the fire gradient drifts the other way.
+      const heroEl = document.querySelector<HTMLElement>("[data-hero]");
+      const title = heroEl?.querySelector<HTMLElement>(".hero__title");
+      const glow = heroEl?.querySelector<HTMLElement>(".hero__glow");
+      if (heroEl && title) {
+        gsap.set(title, { transformPerspective: 900, transformOrigin: "0% 60%" });
+        const ry = gsap.quickTo(title, "rotationY", { duration: 1.1, ease: "power3" });
+        const rx = gsap.quickTo(title, "rotationX", { duration: 1.1, ease: "power3" });
+        const gx = glow ? gsap.quickTo(glow, "x", { duration: 1.6, ease: "power3" }) : null;
+        const gy = glow ? gsap.quickTo(glow, "y", { duration: 1.6, ease: "power3" }) : null;
+        const move = (e: PointerEvent) => {
+          const nx = e.clientX / innerWidth - 0.5, ny = e.clientY / innerHeight - 0.5;
+          ry(nx * 7); rx(-ny * 5); gx?.(-nx * 60); gy?.(-ny * 40);
+        };
+        window.addEventListener("pointermove", move, { passive: true });
+        cleanups.push(() => { window.removeEventListener("pointermove", move); gsap.set([title, glow].filter(Boolean), { clearProps: "transform" }); });
+      }
+    }
+
+    // Text scramble on [data-scramble] links (hover/focus). The original label is restored and exposed via aria-label.
+    {
+      const glyphs = "!<>-_/[]{}=+*^?#";
+      const run = (el: HTMLElement) => {
+        const original = el.dataset.label ?? (el.dataset.label = el.textContent ?? "");
+        el.setAttribute("aria-label", original);
+        const state = { p: 0 };
+        gsap.killTweensOf(state);
+        gsap.to(state, {
+          p: 1, duration: 0.55, ease: "none",
+          onUpdate: () => {
+            el.textContent = original.split("").map((c, i) => (c === " " || i < state.p * original.length ? c : glyphs[(Math.random() * glyphs.length) | 0])).join("");
+          },
+          onComplete: () => { el.textContent = original; },
+        });
+      };
+      const onOver = (e: Event) => { const el = (e.target as Element | null)?.closest?.<HTMLElement>("[data-scramble]"); if (el) run(el); };
+      document.addEventListener("pointerover", onOver, { passive: true });
+      document.addEventListener("focusin", onOver);
+      cleanups.push(() => { document.removeEventListener("pointerover", onOver); document.removeEventListener("focusin", onOver); });
     }
 
     if (document.documentElement.dataset.curtain) {

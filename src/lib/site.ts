@@ -45,6 +45,7 @@ export const site = {
 export const nav = [
   { href: "/menu", label: "Menú" },
   { href: "/historia", label: "Historia" },
+  { href: "/eventos", label: "Eventos" },
   { href: "/ubicacion", label: "Ubicación" },
   { href: "/contacto", label: "Contacto" },
 ] as const;
@@ -158,4 +159,44 @@ export const story = [
   "Los fundadores de Fogo de Chão crecieron en una granja tradicional del sur de Brasil, en la Sierra Gaucha. Allí aprendieron a cocinar en la tradición del churrasco.",
   "Dejaron el campo de Rio Grande del Sur para formarse como churrasqueros en Río de Janeiro y São Paulo. El primer restaurante, de estructura de madera, nació en Porto Alegre, de una obsesión por la calidad y el respeto por la herencia de las familias fundadoras.",
   "De Porto Alegre a São Paulo, y por pedido de sus huéspedes, a Dallas y a Nueva York. Hoy la brasa llega a Santa Cruz de la Sierra, al Boulevard del Ventura Mall.",
+] as const;
+
+/** Occasions the team already handles by hand (see the concierge). No capacities, packages or prices are promised here. */
+export const occasions = [
+  { name: "Cumpleaños", text: "Una mesa larga, la brasa al centro y alguien que se ocupa de que no falte nada." },
+  { name: "Aniversarios", text: "Una noche tranquila para dos, o una mesa con toda la familia." },
+  { name: "Reuniones de empresa", text: "Para cerrar un trato o celebrar un trimestre, con el servicio a tu ritmo." },
+  { name: "Despedidas y graduaciones", text: "Grupos que quieren conversar largo, comer bien y no mirar el reloj." },
+] as const;
+
+/** FAQ. Every answer is either a verified fact or an honest hand-off to the team (nothing invented). */
+export const faqs = [
+  {
+    q: "¿Qué es un rodizio?",
+    a: "Es un servicio continuo: los gaúchos pasan con los cortes en espada y los tallan en tu plato. Tú marcas el ritmo con un token de dos caras, verde para seguir y rojo para pausar.",
+  },
+  {
+    q: "¿Cuáles son los horarios?",
+    a: "Abrimos todos los días: almuerzo de 11:30 a 16:00 y cena de 19:00 a 23:00 (hora de Bolivia).",
+  },
+  {
+    q: "¿Dónde están?",
+    a: "En el Boulevard del Centro Comercial Ventura Mall, Av. 4to Anillo esq. Av. San Martín S/N, Santa Cruz de la Sierra.",
+  },
+  {
+    q: "¿Cómo reservo una mesa?",
+    a: "En línea desde la página de reservas, por WhatsApp o por teléfono. Una consulta por el chat o el formulario no es una reserva hasta que el restaurante la confirme.",
+  },
+  {
+    q: "¿Atienden grupos y celebraciones?",
+    a: "Sí, coordinamos cada caso con el equipo. Cuéntanos la fecha, el número de personas y la ocasión desde la página de eventos o por WhatsApp.",
+  },
+  {
+    q: "¿Cuánto cuesta?",
+    a: "Los precios y promociones vigentes los confirma el equipo directamente, para que nunca veas un dato desactualizado. Escríbenos por WhatsApp.",
+  },
+  {
+    q: "¿Tienen opciones para alergias, niños, estacionamiento o delivery?",
+    a: "No tenemos ese dato confirmado en esta página y preferimos no darte uno incorrecto. El equipo te lo confirma por WhatsApp o por teléfono antes de tu visita.",
+  },
 ] as const;

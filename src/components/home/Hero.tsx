@@ -14,13 +14,14 @@ export function Hero() {
       <div className="hero__media" aria-hidden="true">
         <Image src="/media/img/hero-poster.webp" alt="" fill priority sizes="100vw" className="hero__poster" />
         <HeroVideo />
+        <div className="hero__glow"><i /><i /><i /></div>
         <div className="hero__scrim" />
         <Embers />
       </div>
 
       <div className="container hero__inner">
         <p className="eyebrow hero__kicker" data-fade data-intro style={{ "--d": "0.3s" } as CSSProperties}>
-          Rodizio brasileño · {site.city}
+          Rodizio brasileño en {site.city}
         </p>
 
         <div className="hero__body">
@@ -38,7 +39,6 @@ export function Hero() {
         <div className="hero__foot" data-fade data-intro style={{ "--d": "1.2s" } as CSSProperties}>
           <OpenNow />
           <span className="meta hero__loc">{site.location}</span>
-          <span className="hero__cue meta" aria-hidden="true">Desliza <i /></span>
           <HeroPlayToggle />
         </div>
       </div>

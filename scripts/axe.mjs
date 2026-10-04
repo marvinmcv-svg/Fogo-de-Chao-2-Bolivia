@@ -3,7 +3,7 @@ import { chromium } from "playwright-core";
 import { readFileSync } from "node:fs";
 const axeSrc = readFileSync("node_modules/axe-core/axe.min.js", "utf8");
 const base = process.env.BASE ?? "http://localhost:3000";
-const routes = ["/", "/menu", "/historia", "/ubicacion", "/reservas", "/contacto", "/privacidad", "/terminos", "/no-existe"];
+const routes = ["/", "/menu", "/historia", "/ubicacion", "/reservas", "/contacto", "/eventos", "/faq", "/privacidad", "/terminos", "/no-existe"];
 const b = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium", args: ["--no-sandbox"] });
 let total = 0;
 for (const [label, vp, mobile] of [["desktop", { width: 1440, height: 900 }, false], ["mobile", { width: 390, height: 844 }, true]]) {

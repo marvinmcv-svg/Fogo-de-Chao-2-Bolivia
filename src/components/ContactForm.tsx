@@ -9,7 +9,7 @@ type Status = "idle" | "sending" | "sent" | "fallback" | "error";
 
 const topics = ["Reserva", "Evento o grupo", "Comentario o sugerencia", "Otro"] as const;
 
-export function ContactForm({ defaultTopic = "Reserva" }: { defaultTopic?: (typeof topics)[number] }) {
+export function ContactForm({ defaultTopic = "Reserva", variant = "default" }: { defaultTopic?: (typeof topics)[number]; variant?: "default" | "event" }) {
   const uid = useId();
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -34,6 +34,11 @@ export function ContactForm({ defaultTopic = "Reserva" }: { defaultTopic?: (type
     setErrors(next);
     if (Object.keys(next).length) return;
 
+    // Event details travel inside the message so the lead payload (and the WhatsApp fallback) stay one shape.
+    if (variant === "event") {
+      const extra = [data.date && `Fecha: ${data.date}.`, data.guests && `Personas: ${data.guests}.`, data.occasion && `Ocasión: ${data.occasion}.`].filter(Boolean).join(" ");
+      data.message = [extra, data.message?.trim()].filter(Boolean).join(" ");
+    }
     const message = [`Hola, soy ${data.name}.`, `Motivo: ${data.topic}.`, data.message?.trim().replace(/[.!?]*$/, "."), `Mi teléfono: ${data.phone}.`].filter(Boolean).join(" ");
     setWa(whatsappLink(message));
     setStatus("sending");
@@ -91,8 +96,26 @@ export function ContactForm({ defaultTopic = "Reserva" }: { defaultTopic?: (type
           {topics.map((t) => <option key={t}>{t}</option>)}
         </select>
       </div>
+      {variant === "event" && (
+        <>
+          <div className="field">
+            <label htmlFor={f("occasion")}>Ocasión</label>
+            <select id={f("occasion")} name="occasion" defaultValue="Cumpleaños">
+              {["Cumpleaños", "Aniversario", "Reunión de empresa", "Despedida o graduación", "Otra"].map((o) => <option key={o}>{o}</option>)}
+            </select>
+          </div>
+          <div className="field">
+            <label htmlFor={f("guests")}>Número de personas</label>
+            <input id={f("guests")} name="guests" type="number" inputMode="numeric" min={2} max={500} placeholder="Por ejemplo, 12" />
+          </div>
+          <div className="field field--wide">
+            <label htmlFor={f("date")}>Fecha tentativa</label>
+            <input id={f("date")} name="date" type="date" />
+          </div>
+        </>
+      )}
       <div className="field field--wide">
-        <label htmlFor={f("message")}>Mensaje</label>
+        <label htmlFor={f("message")}>{variant === "event" ? "Cuéntanos más" : "Mensaje"}</label>
         <textarea id={f("message")} name="message" rows={4} maxLength={1200} />
       </div>
       {/* honeypot: hidden from people, tempting to bots */}

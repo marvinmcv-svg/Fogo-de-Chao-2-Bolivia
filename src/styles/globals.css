@@ -11,6 +11,14 @@
   --sim: #2f7d4f;
   --nao: #a8221a;
 
+  /* Fire gradient family: warm, deep, desaturated at the dark end (no neon). */
+  --amber: #f0a04b;
+  --garnet: #8c2414;
+  --wine: #3b0d0b;
+  --grad-fire: linear-gradient(118deg, #ff8a3d 0%, #e8561c 34%, #b3321a 68%, #6e1810 100%);
+  --grad-fire-soft: linear-gradient(118deg, rgba(255, 138, 61, 0.2), rgba(232, 86, 28, 0.08) 45%, rgba(110, 24, 16, 0.22));
+  --hairline-hi: inset 0 1px 0 rgba(255, 244, 228, 0.12);
+
   --font-display: var(--font-display-face), "Times New Roman", serif;
   --font-sans: var(--font-sans-face), system-ui, -apple-system, "Segoe UI", sans-serif;
 
@@ -83,14 +91,21 @@ html.lenis, html.lenis body { height: auto; }
 .display, .h1, .h2, .h3 {
   font-family: var(--font-display);
   font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 0.92;
+  letter-spacing: -0.025em;
+  line-height: 0.96;
   text-wrap: balance;
+  font-optical-sizing: auto;
 }
 .display, .h1 { font-size: var(--fs-h1); }
 .h2 { font-size: var(--fs-h2); line-height: 0.96; }
 .h3 { font-size: var(--fs-h3); line-height: 1.02; letter-spacing: -0.01em; }
-.display em, .h1 em, .h2 em, .h3 em { font-style: italic; color: var(--ember); }
+.display em, .h1 em, .h2 em, .h3 em {
+  font-style: italic; color: var(--ember); padding-inline: 0.04em; padding-bottom: 0.08em;
+  background: linear-gradient(100deg, #ffb36b 0%, #ff7a2f 30%, #e8561c 55%, #ffb36b 100%) 0 0 / 220% 100%;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  animation: ember-sheen 9s var(--ease-in-out) infinite alternate;
+}
+@keyframes ember-sheen { to { background-position: 100% 0; } }
 .lede { font-size: var(--fs-lede); line-height: 1.4; color: var(--bone); max-width: 38ch; text-wrap: pretty; }
 .body { color: var(--smoke); max-width: 56ch; text-wrap: pretty; }
 .eyebrow {
@@ -123,12 +138,17 @@ html.lenis, html.lenis body { height: auto; }
 .btn .arrow { width: 1.1rem; height: 1.1rem; transition: transform 0.45s var(--ease); }
 .btn:hover .arrow { transform: translateX(4px); }
 
-.btn-primary { background: var(--ember); color: var(--char); }
+.btn-primary {
+  background: var(--grad-fire) 0 0 / 180% 100%; color: var(--char);
+  box-shadow: var(--hairline-hi), 0 0.6rem 2rem -0.8rem rgba(232, 86, 28, 0.7);
+  transition: color 0.45s var(--ease), border-color 0.45s var(--ease), transform 0.45s var(--ease), background-position 0.9s var(--ease), box-shadow 0.5s var(--ease);
+}
+.btn-primary:hover { background-position: 100% 0; box-shadow: var(--hairline-hi), 0 0.9rem 2.6rem -0.7rem rgba(255, 138, 61, 0.8); }
+.btn:active { transform: scale(0.98); }
 .btn-primary::before { background: var(--bone); }
-.btn-ghost { border: 1px solid var(--line); color: var(--bone); }
+.btn-ghost { border: 1px solid var(--line); color: var(--bone); background: rgba(239, 230, 214, 0.03); box-shadow: var(--hairline-hi); }
 .btn-ghost::before { background: var(--bone); }
 .btn-ghost:hover, .btn-ghost:focus-visible { color: var(--char); border-color: var(--bone); }
-.light .display em, .light .h1 em, .light .h2 em, .light .h3 em { color: var(--ember-deep); } /* #e8561c on bone is 2.9:1; the deeper ember is ≥5:1 */
 .light .btn-ghost { border-color: rgba(13, 10, 8, 0.3); color: var(--char); }
 .light .btn-ghost::before { background: var(--char); }
 .light .btn-ghost:hover { color: var(--bone); }
@@ -235,6 +255,7 @@ html.lenis, html.lenis body { height: auto; }
 .footer__bottom { display: flex; flex-wrap: wrap; gap: 1rem 2rem; justify-content: space-between; padding-block: 1.75rem 2.25rem; font-size: 0.8rem; color: var(--smoke); }
 .footer__bottom nav { display: flex; gap: 1.5rem; }
 .footer__bottom a:hover { color: var(--bone); }
+@media (min-width: 62rem) { .footer__bottom { padding-right: 12.5rem; } } /* keep the fixed dock clear of the legal links */
 
 /* ───────────── Utilities ───────────── */
 .stack-s > * + * { margin-top: 1rem; }
@@ -265,23 +286,12 @@ html.lenis, html.lenis body { height: auto; }
 .curtain__label { font-family: var(--font-display); font-style: italic; font-size: clamp(3rem, 10vw, 9rem); color: var(--char); letter-spacing: -0.02em; line-height: 1; }
 .curtain[style*="visible"] { pointer-events: all; }
 
-/* ───────────── Cursor ring (fine pointers) ───────────── */
-.cursor { position: fixed; left: 0; top: 0; z-index: 180; pointer-events: none; opacity: 0; transition: opacity 0.3s; }
-.cursor::before {
-  content: ""; position: absolute; width: 2.25rem; height: 2.25rem; margin: -1.125rem 0 0 -1.125rem; border-radius: 50%;
-  border: 1px solid rgba(239, 230, 214, 0.7); transition: transform 0.5s var(--ease), background-color 0.4s, border-color 0.4s;
-}
-.cursor.is-on { opacity: 1; }
-.cursor.is-link::before { transform: scale(1.8); background: rgba(232, 86, 28, 0.16); border-color: var(--ember); }
-.cursor.has-label::before { transform: scale(2.6); background: var(--ember); border-color: var(--ember); }
-.cursor__label { position: absolute; transform: translate(-50%, -50%); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--char); white-space: nowrap; }
-
 /* ───────────── Scroll progress (no JS) ───────────── */
 @supports (animation-timeline: scroll()) {
   .header::after {
-    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--ember);
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--grad-fire);
     transform-origin: left; transform: scaleX(0); animation: progress linear both; animation-timeline: scroll(root block);
   }
   @keyframes progress { to { transform: scaleX(1); } }
 }
-@media (prefers-reduced-motion: reduce) { .cursor, .curtain { display: none; } .header::after { display: none; } }
+@media (prefers-reduced-motion: reduce) { .curtain { display: none; } .header::after { display: none; } }
